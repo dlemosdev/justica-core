@@ -1,0 +1,15 @@
+export {
+  criarJusticaCoreConfig,
+  JUSTICA_ACCESS_TOKEN_KEY,
+  JUSTICA_API_URL,
+  JUSTICA_BASE_URL_KEYCLOACK,
+  JUSTICA_CORE_CONFIG_PADRAO,
+  JUSTICA_MARGEM_SEGURANCA_REFRESH_TOKEN_EM_SEGUNDOS,
+  JUSTICA_REFRESH_TOKEN_KEY,
+  JusticaCoreConfig,
+  JusticaJwtPayload,
+  JusticaRefreshTokenRequest,
+  JusticaRefreshTokenResponse,
+  JusticaToken,
+  JusticaUsuarioLogado
+} from '@justica/core';

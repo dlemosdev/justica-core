@@ -1,0 +1,9 @@
+dist
+coverage
+node_modules
+.angular
+.idea
+.vscode
+tmp
+package-lock.json
+docker/verdaccio/storage

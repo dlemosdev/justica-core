@@ -1,0 +1,189 @@
+{
+  "root": true,
+  "ignorePatterns": [
+    "dist/**/*",
+    "node_modules/**/*",
+    "coverage/**/*"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "projects/justica-core/tsconfig.lib.json",
+          "projects/justica-core/tsconfig.spec.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended"
+      ],
+      "rules": {
+        "@angular-eslint/component-class-suffix": "error",
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "justica",
+            "style": "kebab-case"
+          }
+        ],
+        "@angular-eslint/directive-class-suffix": "error",
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "justica",
+            "style": "camelCase"
+          }
+        ],
+
+        "@typescript-eslint/ban-types": "off",
+        "@typescript-eslint/explicit-member-accessibility": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-inferrable-types": "off",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/no-var-requires": "off",
+
+        "@typescript-eslint/prefer-readonly": "error",
+
+        "@typescript-eslint/naming-convention": [
+          "error",
+
+          {
+            "selector": "classProperty",
+            "modifiers": ["private", "static", "readonly"],
+            "format": ["UPPER_CASE"]
+          },
+
+          {
+            "selector": "classProperty",
+            "modifiers": ["private"],
+            "format": ["camelCase"],
+            "leadingUnderscore": "require"
+          },
+
+          {
+            "selector": "parameterProperty",
+            "modifiers": ["private"],
+            "format": ["camelCase"],
+            "leadingUnderscore": "require"
+          },
+
+          {
+            "selector": "classMethod",
+            "modifiers": ["private"],
+            "format": ["camelCase"],
+            "leadingUnderscore": "forbid"
+          }
+        ],
+        "curly": "error",
+        "eqeqeq": [
+          "error",
+          "smart"
+        ],
+        "max-len": [
+          "warn",
+          {
+            "code": 140,
+            "ignoreComments": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals": true
+          }
+        ],
+        "no-console": [
+          "error",
+          {
+            "allow": [
+              "warn",
+              "error"
+            ]
+          }
+        ],
+        "no-fallthrough": "error",
+        "no-restricted-imports": [
+          "error",
+          {
+            "paths": [
+              {
+                "name": "../models",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "./models",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "../services",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "./services",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "../tokens",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "./tokens",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "../guards",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "./guards",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "../interceptors",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "./interceptors",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "../utils",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              },
+              {
+                "name": "./utils",
+                "message": "Nao use barrel em imports internos da lib. Importe o arquivo especifico."
+              }
+            ]
+          }
+        ],
+        "prefer-const": "error",
+        "quotes": [
+          "error",
+          "single",
+          {
+            "avoidEscape": true
+          }
+        ],
+        "semi": [
+          "error",
+          "always"
+        ]
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended"
+      ],
+      "rules": {}
+    }
+  ]
+}

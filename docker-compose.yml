@@ -1,0 +1,10 @@
+services:
+  verdaccio:
+    image: verdaccio/verdaccio:5
+    container_name: justica-verdaccio
+    ports:
+      - '4873:4873'
+    volumes:
+      - ./.verdaccio/config.yml:/verdaccio/conf/config.yaml
+      - ./tmp:/verdaccio/tmp
+    restart: unless-stopped

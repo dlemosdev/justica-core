@@ -1,0 +1,38 @@
+storage: ../tmp/local-registry/storage
+
+web:
+  title: Verdaccio Local - Justiça UI
+
+auth:
+  htpasswd:
+    file: ../tmp/local-registry/htpasswd
+    max_users: 1000
+
+uplinks:
+  npmjs:
+    url: https://registry.npmjs.org/
+    maxage: 60m
+    timeout: 30s
+    max_fails: 3
+    fail_timeout: 5m
+
+packages:
+  '@justica/*':
+    access: $all
+    publish: $authenticated
+    unpublish: $authenticated
+    proxy: npmjs
+
+  '**':
+    access: $all
+    publish: $authenticated
+    unpublish: $authenticated
+    proxy: npmjs
+
+publish:
+  allow_offline: true
+
+log:
+  type: stdout
+  format: pretty
+  level: http

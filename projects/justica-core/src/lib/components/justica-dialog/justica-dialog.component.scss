@@ -17,7 +17,7 @@
   max-width: 100%;
   padding: 2rem;
   border-radius: 0.75rem;
-  background: #ffffff;
+  background: var(--justica-color-background, #ffffff);
   text-align: center;
   box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.25);
 
@@ -42,40 +42,40 @@
 }
 
 .justica-dialog__icone--success {
-  color: #16a34a;
-  border-color: #16a34a;
+  color: var(--justica-color-success, #115836);
+  border-color: var(--justica-color-success, #115836);
 }
 
 .justica-dialog__icone--error {
-  color: #dc2626;
-  border-color: #dc2626;
+  color: var(--justica-color-danger, #b21d1b);
+  border-color: var(--justica-color-danger, #b21d1b);
 }
 
 .justica-dialog__icone--warning {
-  color: #f59e0b;
-  border-color: #f59e0b;
+  color: var(--justica-color-warning, #f5af00);
+  border-color: var(--justica-color-warning, #f5af00);
 }
 
 .justica-dialog__icone--info {
-  color: #2563eb;
-  border-color: #2563eb;
+  color: var(--justica-color-info, #006753);
+  border-color: var(--justica-color-info, #006753);
 }
 
 .justica-dialog__icone--question {
-  color: #64748b;
-  border-color: #64748b;
+  color: var(--justica-color-secondary, #8fb4ca);
+  border-color: var(--justica-color-secondary, #8fb4ca);
 }
 
 .justica-dialog__titulo {
   margin: 0 0 0.75rem;
-  color: #1f2937;
+  color: var(--justica-color-text-primary, #1f2937);
   font-size: 1.5rem;
   font-weight: 600;
 }
 
 .justica-dialog__mensagem {
   margin: 0;
-  color: #4b5563;
+  color: var(--justica-color-text-secondary, #6b7280);
   font-size: 1rem;
   line-height: 1.5;
   white-space: pre-line;
@@ -108,20 +108,20 @@
 
 .justica-dialog__botao--confirmar {
   color: #ffffff;
-  background: #2563eb;
+  background: var(--justica-color-primary, #004164);
 }
 
 .justica-dialog__botao--confirmar:hover {
-  background: #1d4ed8;
+  background: var(--justica-blue-800, #20485d);
 }
 
 .justica-dialog__botao--cancelar {
   color: #ffffff;
-  background: #6b7280;
+  background: var(--justica-gray-500, #6b7280);
 }
 
 .justica-dialog__botao--cancelar:hover {
-  background: #4b5563;
+  background: var(--justica-gray-600, #4b5563);
 }
 
 @keyframes justica-dialog-fade-in {

@@ -13,7 +13,6 @@ import {JusticaTokenStorageService} from './justica-token-storage.service';
 export class JusticaAuthService {
 
   constructor(
-    private readonly _justicaSessaoMonitorService: JusticaSessaoMonitorService,
     private readonly _justicaTokenStorageService: JusticaTokenStorageService,
     private readonly _justicaInatividadeUsuarioService: JusticaInatividadeUsuarioService,
     @Inject(JUSTICA_CORE_CONFIG)
@@ -25,7 +24,6 @@ export class JusticaAuthService {
 
   realizarLogout(): void {
     this._justicaInatividadeUsuarioService.pararMonitoramento();
-    this._justicaSessaoMonitorService.pararMonitoramento();
     this._justicaTokenStorageService.limparTokens();
     this._window.location.pathname = this._config.rotaLogin || '/login';
   }

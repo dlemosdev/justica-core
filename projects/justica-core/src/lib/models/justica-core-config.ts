@@ -20,9 +20,7 @@ export const JUSTICA_CORE_CONFIG_PADRAO: JusticaCoreConfig = {
   margemSegurancaRefreshTokenSegundos: JUSTICA_MARGEM_SEGURANCA_REFRESH_TOKEN_EM_SEGUNDOS
 };
 
-export function criarJusticaCoreConfig(
-  config: JusticaCoreConfig = {}
-): JusticaCoreConfig {
+export function criarJusticaCoreConfig(config: JusticaCoreConfig = {}): JusticaCoreConfig {
   return {
     ...JUSTICA_CORE_CONFIG_PADRAO,
     ...config

@@ -15,9 +15,7 @@ describe('JusticaAuthInterceptor', () => {
     localStorage.setItem('justica.refreshToken', 'refresh-antigo');
 
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule
-      ],
+      imports: [HttpClientTestingModule],
       providers: [
         {
           provide: JUSTICA_CORE_CONFIG,
@@ -48,8 +46,7 @@ describe('JusticaAuthInterceptor', () => {
     http.get('/api/processos').subscribe();
 
     const requisicao = httpMock.expectOne('/api/processos');
-    expect(requisicao.request.headers.get('Authorization'))
-      .toBe('Bearer access-antigo');
+    expect(requisicao.request.headers.get('Authorization')).toBe('Bearer access-antigo');
     requisicao.flush({});
   });
 
@@ -57,10 +54,13 @@ describe('JusticaAuthInterceptor', () => {
     http.get('/api/processos').subscribe();
 
     const primeiraRequisicao = httpMock.expectOne('/api/processos');
-    primeiraRequisicao.flush({}, {
-      status: 401,
-      statusText: 'Unauthorized'
-    });
+    primeiraRequisicao.flush(
+      {},
+      {
+        status: 401,
+        statusText: 'Unauthorized'
+      }
+    );
 
     const refresh = httpMock.expectOne('/api/auth/refresh');
     expect(refresh.request.headers.has('Authorization')).toBeFalse();
@@ -70,8 +70,7 @@ describe('JusticaAuthInterceptor', () => {
     });
 
     const segundaRequisicao = httpMock.expectOne('/api/processos');
-    expect(segundaRequisicao.request.headers.get('Authorization'))
-      .toBe('Bearer access-novo');
+    expect(segundaRequisicao.request.headers.get('Authorization')).toBe('Bearer access-novo');
     segundaRequisicao.flush({});
   });
 
@@ -79,17 +78,23 @@ describe('JusticaAuthInterceptor', () => {
     let erroRecebido: HttpErrorResponse | undefined;
 
     http.get('/api/processos').subscribe({
-      error: erro => erroRecebido = erro
+      error: (erro) => (erroRecebido = erro)
     });
 
-    httpMock.expectOne('/api/processos').flush({}, {
-      status: 401,
-      statusText: 'Unauthorized'
-    });
-    httpMock.expectOne('/api/auth/refresh').flush({}, {
-      status: 401,
-      statusText: 'Unauthorized'
-    });
+    httpMock.expectOne('/api/processos').flush(
+      {},
+      {
+        status: 401,
+        statusText: 'Unauthorized'
+      }
+    );
+    httpMock.expectOne('/api/auth/refresh').flush(
+      {},
+      {
+        status: 401,
+        statusText: 'Unauthorized'
+      }
+    );
 
     expect(erroRecebido).toBeTruthy();
     expect(localStorage.getItem('justica.accessToken')).toBeNull();

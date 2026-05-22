@@ -1,1 +1,1 @@
-export { JusticaAutenticadoGuard } from '@justica/core';
+export {JusticaAutenticadoGuard} from '@justica/core';

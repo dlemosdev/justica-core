@@ -8,26 +8,16 @@
     "declaration": false,
     "downlevelIteration": true,
     "paths": {
-      "@justica/core": [
-        "projects/justica-core/src/public-api.ts"
-      ],
-      "@justica/core/*": [
-        "projects/justica-core/*/public-api.ts"
-      ],
-      "justica-core": [
-        "dist/justica-core/justica-core",
-        "dist/justica-core"
-      ]
+      "@justica/core": ["projects/justica-core/src/public-api.ts"],
+      "@justica/core/*": ["projects/justica-core/*/public-api.ts"],
+      "justica-core": ["dist/justica-core/justica-core", "dist/justica-core"]
     },
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "es2015",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false

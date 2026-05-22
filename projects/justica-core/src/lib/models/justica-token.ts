@@ -12,10 +12,10 @@ export interface JusticaToken {
   acr?: string;
   scope?: string;
   sid?: string;
-  usuario: number, // Identificador do usuário
-  nome: string, // Nome do usuário
+  usuario: number; // Identificador do usuário
+  nome: string; // Nome do usuário
   authorities: string[];
-  local: number, // Identificador do local
-  nomeLocal: string
+  local: number; // Identificador do local
+  nomeLocal: string;
   [chave: string]: unknown;
 }

@@ -1,1 +1,1 @@
-export { JusticaAuthInterceptor } from '@justica/core';
+export {JusticaAuthInterceptor} from '@justica/core';

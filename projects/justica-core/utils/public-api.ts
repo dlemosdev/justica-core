@@ -1,1 +1,1 @@
-export { StringUtils } from '@justica/core';
+export {StringUtils} from '@justica/core';

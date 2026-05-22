@@ -70,17 +70,14 @@ export class JusticaTokenUtilService {
 
   private decodificarBase64Url(valor: string): string {
     const base64 = valor.replace(/-/g, '+').replace(/_/g, '/');
-    const normalizado = base64.padEnd(
-      base64.length + (4 - base64.length % 4) % 4,
-      '='
-    );
+    const normalizado = base64.padEnd(base64.length + ((4 - (base64.length % 4)) % 4), '=');
     const texto = atob(normalizado);
 
     try {
       return decodeURIComponent(
         texto
           .split('')
-          .map(caractere => {
+          .map((caractere) => {
             return '%' + ('00' + caractere.charCodeAt(0).toString(16)).slice(-2);
           })
           .join('')

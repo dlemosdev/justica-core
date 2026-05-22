@@ -1,11 +1,6 @@
 import {Type} from '@angular/core';
 
-export type JusticaDialogTipo =
-  | 'success'
-  | 'error'
-  | 'warning'
-  | 'info'
-  | 'question';
+export type JusticaDialogTipo = 'success' | 'error' | 'warning' | 'info' | 'question';
 
 export interface JusticaDialogConfig {
   titulo?: string;

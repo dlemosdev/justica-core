@@ -76,14 +76,19 @@ export interface JusticaWindow {
   open(url?: string, target?: string, features?: string): JusticaWindow | null;
   prompt(mensagem?: string, valorPadrao?: string): string | null;
   removeEventListener(tipo: string, listener: JusticaWindowEventListener): void;
-  setInterval(callback: (...argumentos: unknown[]) => void, atraso?: number, ...argumentos: unknown[]): number;
-  setTimeout(callback: (...argumentos: unknown[]) => void, atraso?: number, ...argumentos: unknown[]): number;
+  setInterval(
+    callback: (...argumentos: unknown[]) => void,
+    atraso?: number,
+    ...argumentos: unknown[]
+  ): number;
+  setTimeout(
+    callback: (...argumentos: unknown[]) => void,
+    atraso?: number,
+    ...argumentos: unknown[]
+  ): number;
 }
 
-export const JUSTICA_WINDOW = new InjectionToken<JusticaWindow>(
-  'JUSTICA_WINDOW',
-  {
-    providedIn: 'root',
-    factory: () => window as JusticaWindow
-  }
-);
+export const JUSTICA_WINDOW = new InjectionToken<JusticaWindow>('JUSTICA_WINDOW', {
+  providedIn: 'root',
+  factory: () => window as JusticaWindow
+});

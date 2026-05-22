@@ -28,33 +28,33 @@ A lib `@justica/core`:
 
 Principais versões do workspace:
 
-| Pacote | Versão |
-| --- | --- |
-| Angular | `~11.2.14` |
-| Angular CLI | `~11.2.19` |
-| TypeScript | `~4.1.5` |
-| RxJS | `~6.6.0` |
-| ng-packagr | `^11.0.0` |
-| ESLint | `^7.32.0` |
-| angular-eslint | `^4.3.0` |
+| Pacote         | Versão     |
+| -------------- | ---------- |
+| Angular        | `~11.2.14` |
+| Angular CLI    | `~11.2.19` |
+| TypeScript     | `~4.1.5`   |
+| RxJS           | `~6.6.0`   |
+| ng-packagr     | `^11.0.0`  |
+| ESLint         | `^7.32.0`  |
+| angular-eslint | `^4.3.0`   |
 
 ## Scripts
 
-| Comando | Descrição |
-| --- | --- |
-| `npm install` | Instala dependências do workspace. |
-| `npm run build -- justica-core` | Build da lib em modo padrão. |
-| `npm run build:justica-core` | Build de produção da lib. |
-| `npm run watch:justica-core` | Build contínuo da lib. |
-| `npm run lint` | Executa ESLint. |
-| `npm run format` | Formata arquivos com Prettier. |
-| `npm run format:check` | Verifica formatação com Prettier. |
-| `npx ng test justica-core --watch=false --browsers=ChromeHeadlessSemGpu` | Executa testes unitários em modo headless. |
-| `npm run pack:ui` | Gera pacote `.tgz` a partir de `dist/justica-core`. |
-| `npm run verdaccio:up` | Sobe registry local via Docker Compose. |
-| `npm run publish:local` | Publica no Verdaccio local. |
-| `npm run publish:snapshot` | Publica no registry snapshot. |
-| `npm run publish:release` | Publica no registry release. |
+| Comando                                                                  | Descrição                                           |
+| ------------------------------------------------------------------------ | --------------------------------------------------- |
+| `npm install`                                                            | Instala dependências do workspace.                  |
+| `npm run build -- justica-core`                                          | Build da lib em modo padrão.                        |
+| `npm run build:justica-core`                                             | Build de produção da lib.                           |
+| `npm run watch:justica-core`                                             | Build contínuo da lib.                              |
+| `npm run lint`                                                           | Executa ESLint.                                     |
+| `npm run format`                                                         | Formata arquivos com Prettier.                      |
+| `npm run format:check`                                                   | Verifica formatação com Prettier.                   |
+| `npx ng test justica-core --watch=false --browsers=ChromeHeadlessSemGpu` | Executa testes unitários em modo headless.          |
+| `npm run pack:ui`                                                        | Gera pacote `.tgz` a partir de `dist/justica-core`. |
+| `npm run verdaccio:up`                                                   | Sobe registry local via Docker Compose.             |
+| `npm run publish:local`                                                  | Publica no Verdaccio local.                         |
+| `npm run publish:snapshot`                                               | Publica no registry snapshot.                       |
+| `npm run publish:release`                                                | Publica no registry release.                        |
 
 ## Organização do Projeto
 
@@ -77,16 +77,16 @@ Principais versões do workspace:
 A API primária exporta todos os símbolos públicos:
 
 ```ts
-import { JusticaCoreModule, JusticaUsuarioService } from '@justica/core';
+import {JusticaCoreModule, JusticaUsuarioService} from '@justica/core';
 ```
 
 Os secondary entry points existem para consumidores que preferem imports segmentados:
 
 ```ts
-import { JusticaAutenticadoGuard } from '@justica/core/guards';
-import { JusticaDialogModule } from '@justica/core/components';
-import { JusticaCoreConfig } from '@justica/core/models';
-import { JusticaUsuarioService } from '@justica/core/services';
+import {JusticaAutenticadoGuard} from '@justica/core/guards';
+import {JusticaDialogModule} from '@justica/core/components';
+import {JusticaCoreConfig} from '@justica/core/models';
+import {JusticaUsuarioService} from '@justica/core/services';
 ```
 
 Esses entry points ficam fora de `src/lib` porque fazem parte da API publicada pelo `ng-packagr`.
@@ -107,13 +107,13 @@ Esses entry points ficam fora de `src/lib` porque fazem parte da API publicada p
 Exemplo correto dentro de `src/lib`:
 
 ```ts
-import { JusticaCoreConfig } from '../models/justica-core-config';
+import {JusticaCoreConfig} from '../models/justica-core-config';
 ```
 
 Exemplo proibido dentro de `src/lib`:
 
 ```ts
-import { JusticaCoreConfig } from '../models';
+import {JusticaCoreConfig} from '../models';
 ```
 
 ## ESLint
@@ -141,9 +141,9 @@ npx ng test justica-core --watch=false --browsers=ChromeHeadlessSemGpu
 No app consumidor:
 
 ```ts
-import { HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { JusticaCoreModule } from '@justica/core';
+import {HttpClientModule} from '@angular/common/http';
+import {NgModule} from '@angular/core';
+import {JusticaCoreModule} from '@justica/core';
 
 @NgModule({
   imports: [
@@ -181,19 +181,13 @@ nos 5 minutos finais. O consumidor pode sobrescrever os tempos e os eventos
 monitorados por provider.
 
 ```ts
-import { NgModule } from '@angular/core';
-import { JusticaDialogModule } from '@justica/core/components';
-import {
-  JUSTICA_INATIVIDADE_USUARIO_CONFIG_PADRAO
-} from '@justica/core/models';
-import {
-  JUSTICA_INATIVIDADE_USUARIO_CONFIG
-} from '@justica/core/tokens';
+import {NgModule} from '@angular/core';
+import {JusticaDialogModule} from '@justica/core/components';
+import {JUSTICA_INATIVIDADE_USUARIO_CONFIG_PADRAO} from '@justica/core/models';
+import {JUSTICA_INATIVIDADE_USUARIO_CONFIG} from '@justica/core/tokens';
 
 @NgModule({
-  imports: [
-    JusticaDialogModule
-  ],
+  imports: [JusticaDialogModule],
   providers: [
     {
       provide: JUSTICA_INATIVIDADE_USUARIO_CONFIG,
@@ -211,9 +205,9 @@ export class AppModule {}
 No componente raiz, inicie o monitoramento e assine o evento de inatividade:
 
 ```ts
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { JusticaInatividadeUsuarioService } from '@justica/core/services';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {JusticaInatividadeUsuarioService} from '@justica/core/services';
 
 export class AppComponent implements OnInit, OnDestroy {
   private readonly _subscription = new Subscription();
@@ -226,10 +220,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this._justicaInatividadeUsuarioService.iniciarMonitoramento();
 
     this._subscription.add(
-      this._justicaInatividadeUsuarioService.usuarioInativo$
-        .subscribe(() => {
-          this.realizarLogoutPorInatividade();
-        })
+      this._justicaInatividadeUsuarioService.usuarioInativo$.subscribe(() => {
+        this.realizarLogoutPorInatividade();
+      })
     );
   }
 

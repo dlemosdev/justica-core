@@ -1,4 +1,11 @@
-import {ApplicationRef, ComponentFactoryResolver, EmbeddedViewRef, Inject, Injectable, Injector} from '@angular/core';
+import {
+  ApplicationRef,
+  ComponentFactoryResolver,
+  EmbeddedViewRef,
+  Inject,
+  Injectable,
+  Injector
+} from '@angular/core';
 
 import {JusticaDialogComponent} from '../components/justica-dialog/justica-dialog.component';
 import {JusticaDialogRef} from '../components/justica-dialog/justica-dialog-ref';
@@ -33,14 +40,12 @@ export class JusticaDialogService {
     };
     const dialogInjector = Injector.create({
       providers: [
-        { provide: JusticaDialogRef, useValue: dialogRef },
-        { provide: JUSTICA_DIALOG_CONFIG, useValue: dialogConfig }
+        {provide: JusticaDialogRef, useValue: dialogRef},
+        {provide: JUSTICA_DIALOG_CONFIG, useValue: dialogConfig}
       ],
       parent: this._injector
     });
-    const factory = this._componentFactoryResolver.resolveComponentFactory(
-      JusticaDialogComponent
-    );
+    const factory = this._componentFactoryResolver.resolveComponentFactory(JusticaDialogComponent);
     const componentRef = factory.create(dialogInjector);
 
     componentRef.instance.config = dialogConfig;
@@ -84,7 +89,7 @@ export class JusticaDialogService {
       exibirConfirmar: true,
       textoConfirmar: 'OK',
       fecharComEsc: false,
-      fecharAoClicarFora: false,
+      fecharAoClicarFora: false
     });
   }
 
@@ -96,7 +101,7 @@ export class JusticaDialogService {
       exibirConfirmar: true,
       textoConfirmar: 'OK',
       fecharComEsc: false,
-      fecharAoClicarFora: false,
+      fecharAoClicarFora: false
     });
   }
 
@@ -108,7 +113,7 @@ export class JusticaDialogService {
       exibirConfirmar: true,
       textoConfirmar: 'OK',
       fecharComEsc: false,
-      fecharAoClicarFora: false,
+      fecharAoClicarFora: false
     });
   }
 

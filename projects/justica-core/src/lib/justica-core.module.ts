@@ -8,20 +8,12 @@ import {provideJusticaCoreConfig} from './tokens/justica-core-config.token';
 import {JusticaBotaoSessaoExpiradaComponent} from './services/justica-sessao-monitor.service';
 
 @NgModule({
-  declarations: [
-    JusticaBotaoSessaoExpiradaComponent
-  ],
-  imports: [
-    JusticaDialogModule,
-  ],
-  exports: [
-    JusticaDialogModule
-  ]
+  declarations: [JusticaBotaoSessaoExpiradaComponent],
+  imports: [JusticaDialogModule],
+  exports: [JusticaDialogModule]
 })
 export class JusticaCoreModule {
-  static forRoot(
-    config: JusticaCoreConfig = {}
-  ): ModuleWithProviders<JusticaCoreModule> {
+  static forRoot(config: JusticaCoreConfig = {}): ModuleWithProviders<JusticaCoreModule> {
     return {
       ngModule: JusticaCoreModule,
       providers: [

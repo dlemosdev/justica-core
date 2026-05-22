@@ -12,13 +12,10 @@ export {
   criarJusticaCoreConfig
 } from '../models/justica-core-config';
 
-export const JUSTICA_CORE_CONFIG = new InjectionToken<JusticaCoreConfig>(
-  'JUSTICA_CORE_CONFIG',
-  {
-    providedIn: 'root',
-    factory: criarJusticaCoreConfig
-  }
-);
+export const JUSTICA_CORE_CONFIG = new InjectionToken<JusticaCoreConfig>('JUSTICA_CORE_CONFIG', {
+  providedIn: 'root',
+  factory: criarJusticaCoreConfig
+});
 
 export function provideJusticaCoreConfig(config?: JusticaCoreConfig): Provider[] {
   return [

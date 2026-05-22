@@ -12,14 +12,13 @@ import {JusticaRefreshTokenResponse} from '../models/justica-refresh-token-respo
   providedIn: 'root'
 })
 export class JusticaRefreshTokenService {
-
-  private readonly urlRefreshToken: string;
+  private readonly _urlRefreshToken: string;
 
   /**
    * Guarda refresh em andamento.
    * Todas requests compartilham esta mesma observable.
    */
-  private refreshTokenEmAndamento$?: Observable<JusticaRefreshTokenResponse>;
+  private _refreshTokenEmAndamento$?: Observable<JusticaRefreshTokenResponse>;
 
   constructor(
     @Optional()
@@ -28,7 +27,7 @@ export class JusticaRefreshTokenService {
     private readonly _http: HttpClient,
     private readonly _tokenStorageService: JusticaTokenStorageService
   ) {
-    this.urlRefreshToken = `${this._config.urlKeycloack}/protocol/openid-connect/token`;
+    this._urlRefreshToken = `${this._config.urlKeycloack}/protocol/openid-connect/token`;
   }
 
   renovarToken(): Observable<JusticaRefreshTokenResponse> {
@@ -36,8 +35,8 @@ export class JusticaRefreshTokenService {
      * Se já existe refresh em andamento:
      * reaproveita mesma request HTTP.
      */
-    if (this.refreshTokenEmAndamento$) {
-      return this.refreshTokenEmAndamento$;
+    if (this._refreshTokenEmAndamento$) {
+      return this._refreshTokenEmAndamento$;
     }
 
     const refreshToken = this._tokenStorageService.obterRefreshToken();
@@ -59,18 +58,11 @@ export class JusticaRefreshTokenService {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
-    this.refreshTokenEmAndamento$ = this._http
-      .post<JusticaRefreshTokenResponse>(
-        this.urlRefreshToken,
-        params,
-        {headers},
-      )
+    this._refreshTokenEmAndamento$ = this._http
+      .post<JusticaRefreshTokenResponse>(this._urlRefreshToken, params, {headers})
       .pipe(
         tap((response) => {
-          this._tokenStorageService.salvarTokens(
-            response.access_token,
-            response.refresh_token
-          );
+          this._tokenStorageService.salvarTokens(response.access_token, response.refresh_token);
         }),
 
         catchError((erro) => {
@@ -82,7 +74,7 @@ export class JusticaRefreshTokenService {
           /**
            * Libera nova renovação futura
            */
-          this.refreshTokenEmAndamento$ = undefined;
+          this._refreshTokenEmAndamento$ = undefined;
         }),
 
         /**
@@ -92,7 +84,6 @@ export class JusticaRefreshTokenService {
         shareReplay(1)
       );
 
-    return this.refreshTokenEmAndamento$;
+    return this._refreshTokenEmAndamento$;
   }
 }
-

@@ -12,18 +12,13 @@ import {JusticaAuthService} from './justica-auth.service';
 
 @Component({
   selector: 'justica-botao-sessao-expirada',
-  template: `
-    <button type="button" (click)="confirmar()">
-      OK
-    </button>
-  `
+  template: '<button type="button" (click)="confirmar()">OK</button>'
 })
 export class JusticaBotaoSessaoExpiradaComponent {
   constructor(
     private readonly _dialogRef: JusticaDialogRef,
     private readonly _justicaAuthService: JusticaAuthService
-  ) {
-  }
+  ) {}
 
   confirmar(): void {
     this._dialogRef.fechar(true);
@@ -35,7 +30,6 @@ export class JusticaBotaoSessaoExpiradaComponent {
   providedIn: 'root'
 })
 export class JusticaSessaoMonitorService implements OnDestroy {
-
   private readonly _cincoMinutosEmMs = 5 * 60 * 1000;
   private readonly _segundosParaRedirecionar = 60;
 
@@ -51,8 +45,7 @@ export class JusticaSessaoMonitorService implements OnDestroy {
     private readonly _config: JusticaCoreConfig,
     @Inject(JUSTICA_WINDOW)
     private readonly _window: JusticaWindow
-  ) {
-  }
+  ) {}
 
   ngOnDestroy(): void {
     this.pararMonitoramento();
@@ -70,11 +63,10 @@ export class JusticaSessaoMonitorService implements OnDestroy {
     this.atualizarExpiracaoStorage('expRefreshToken', expiracaoRefreshToken);
 
     if (!token || !refreshToken) {
-      this._justicaDialogService.warning(
-        'Atenção!',
-        'A sua sessão expirou! Realize novamente o login.'
-      ).afterClosed()
-        .subscribe(confirmou => {
+      this._justicaDialogService
+        .warning('Atenção!', 'A sua sessão expirou! Realize novamente o login.')
+        .afterClosed()
+        .subscribe((confirmou) => {
           if (confirmou) {
             this.realizarLogout();
           }
@@ -83,7 +75,8 @@ export class JusticaSessaoMonitorService implements OnDestroy {
     }
 
     const tempoToken = this._justicaJwtUtilService.obterMilissegundosAteExpirar(token);
-    const tempoRefreshToken = this._justicaJwtUtilService.obterMilissegundosAteExpirar(refreshToken);
+    const tempoRefreshToken =
+      this._justicaJwtUtilService.obterMilissegundosAteExpirar(refreshToken);
 
     if (tempoToken === null || tempoRefreshToken === null) {
       this.realizarLogout();
@@ -118,36 +111,40 @@ export class JusticaSessaoMonitorService implements OnDestroy {
   }
 
   private alertarSessaoExpirando(): void {
-    this._justicaDialogService.confirmar(
-      'Sua sessão irá expirar em breve',
-      'Deseja renovar sua sessão?'
-    ).afterClosed().subscribe((confirmou) => {
-      if (!confirmou) {
-        return;
-      }
-      this._justicaRefreshTokenService.renovarToken().subscribe({
-        next: () => this.iniciarMonitoramento(),
-        error: () => this.alertarNovoLogin()
+    this._justicaDialogService
+      .confirmar('Sua sessão irá expirar em breve', 'Deseja renovar sua sessão?')
+      .afterClosed()
+      .subscribe((confirmou) => {
+        if (!confirmou) {
+          return;
+        }
+        this._justicaRefreshTokenService.renovarToken().subscribe({
+          next: () => this.iniciarMonitoramento(),
+          error: () => this.alertarNovoLogin()
+        });
       });
-    });
   }
 
   private alertarNovoLogin(): void {
-    this._justicaDialogService.confirmar(
-      'Sua sessão não pode mais ser renovada',
-      `Você será redirecionado para o login em ${this._segundosParaRedirecionar} segundos.`
-    ).afterClosed().subscribe((confirmou) => {
-      if (confirmou) {
-        this.realizarLogout();
-        return;
-      }
-      this.iniciarContagemRedirect();
-    });
+    this._justicaDialogService
+      .confirmar(
+        'Sua sessão não pode mais ser renovada',
+        `Você será redirecionado para o login em ${this._segundosParaRedirecionar} segundos.`
+      )
+      .afterClosed()
+      .subscribe((confirmou) => {
+        if (confirmou) {
+          this.realizarLogout();
+          return;
+        }
+        this.iniciarContagemRedirect();
+      });
   }
 
   private iniciarContagemRedirect(): void {
-    this._assinaturaRedirect = timer(this._segundosParaRedirecionar * 1000)
-      .subscribe(() => this.realizarLogout());
+    this._assinaturaRedirect = timer(this._segundosParaRedirecionar * 1000).subscribe(() =>
+      this.realizarLogout()
+    );
   }
 
   private realizarLogout(): void {
@@ -162,22 +159,23 @@ export class JusticaSessaoMonitorService implements OnDestroy {
       return;
     }
 
-    this._window.localStorage.setItem(
-      chave,
-      this.formatarDataHora(dataHoraExpiracao)
-    );
+    this._window.localStorage.setItem(chave, this.formatarDataHora(dataHoraExpiracao));
   }
 
   private formatarDataHora(data: Date): string {
-    return [
-      this.preencherComZero(data.getDate()),
-      this.preencherComZero(data.getMonth() + 1),
-      data.getFullYear()
-    ].join('/') + ' ' + [
-      this.preencherComZero(data.getHours()),
-      this.preencherComZero(data.getMinutes()),
-      this.preencherComZero(data.getSeconds())
-    ].join(':');
+    return (
+      [
+        this.preencherComZero(data.getDate()),
+        this.preencherComZero(data.getMonth() + 1),
+        data.getFullYear()
+      ].join('/') +
+      ' ' +
+      [
+        this.preencherComZero(data.getHours()),
+        this.preencherComZero(data.getMinutes()),
+        this.preencherComZero(data.getSeconds())
+      ].join(':')
+    );
   }
 
   private preencherComZero(valor: number): string {

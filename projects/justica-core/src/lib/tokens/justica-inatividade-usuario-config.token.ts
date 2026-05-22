@@ -1,6 +1,9 @@
 import {InjectionToken} from '@angular/core';
 
-import {criarJusticaInatividadeUsuarioConfig, JusticaInatividadeUsuarioConfig} from '../models/justica-inatividade-usuario-config';
+import {
+  criarJusticaInatividadeUsuarioConfig,
+  JusticaInatividadeUsuarioConfig
+} from '../models/justica-inatividade-usuario-config';
 
 export {
   criarJusticaInatividadeUsuarioConfig,
@@ -11,10 +14,7 @@ export {
 } from '../models/justica-inatividade-usuario-config';
 
 export const JUSTICA_INATIVIDADE_USUARIO_CONFIG =
-  new InjectionToken<JusticaInatividadeUsuarioConfig>(
-    'JUSTICA_INATIVIDADE_USUARIO_CONFIG',
-    {
-      providedIn: 'root',
-      factory: criarJusticaInatividadeUsuarioConfig
-    }
-  );
+  new InjectionToken<JusticaInatividadeUsuarioConfig>('JUSTICA_INATIVIDADE_USUARIO_CONFIG', {
+    providedIn: 'root',
+    factory: criarJusticaInatividadeUsuarioConfig
+  });

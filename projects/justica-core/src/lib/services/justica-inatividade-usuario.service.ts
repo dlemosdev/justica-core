@@ -1,5 +1,15 @@
 import {Inject, Injectable, NgZone} from '@angular/core';
-import {EMPTY, fromEvent, interval, merge, Observable, ReplaySubject, Subject, Subscription, timer} from 'rxjs';
+import {
+  EMPTY,
+  fromEvent,
+  interval,
+  merge,
+  Observable,
+  ReplaySubject,
+  Subject,
+  Subscription,
+  timer
+} from 'rxjs';
 import {catchError, finalize, startWith, take} from 'rxjs/operators';
 
 import {JusticaInatividadeUsuarioConfig} from '../models/justica-inatividade-usuario-config';
@@ -37,11 +47,9 @@ export class JusticaInatividadeUsuarioService {
   readonly tempoRestanteMonitoramentoUsuario$: Observable<string> =
     this._tempoRestanteMonitoramentoUsuarioSubject$.asObservable();
 
-  readonly usuarioAtivo$: Observable<void> =
-    this._usuarioAtivoSubject$.asObservable();
+  readonly usuarioAtivo$: Observable<void> = this._usuarioAtivoSubject$.asObservable();
 
-  readonly usuarioInativo$: Observable<void> =
-    this._usuarioInativoSubject$.asObservable();
+  readonly usuarioInativo$: Observable<void> = this._usuarioInativoSubject$.asObservable();
 
   constructor(
     private readonly _ngZone: NgZone,
@@ -79,36 +87,28 @@ export class JusticaInatividadeUsuarioService {
   }
 
   private monitorarAtividade(): void {
-    const eventos$ = this.eventosMonitorados.map(evento =>
-      fromEvent(document, evento)
-    );
+    const eventos$ = this.eventosMonitorados.map((evento) => fromEvent(document, evento));
 
-    this._inscricaoAtividade = merge(...eventos$)
-      .subscribe(() => this.aoDetectarAtividade());
+    this._inscricaoAtividade = merge(...eventos$).subscribe(() => this.aoDetectarAtividade());
   }
 
   private agendarAlerta(): void {
-    const tempoAntesDoAlertaMs =
-      this.tempoLimiteMs - this.tempoAlertaMs;
+    const tempoAntesDoAlertaMs = this.tempoLimiteMs - this.tempoAlertaMs;
 
-    this._inscricaoAlerta = timer(tempoAntesDoAlertaMs)
-      .subscribe(() => this.iniciarAlerta());
+    this._inscricaoAlerta = timer(tempoAntesDoAlertaMs).subscribe(() => this.iniciarAlerta());
   }
 
   private agendarInatividade(): void {
-    this._inscricaoInatividade = timer(this.tempoLimiteMs)
-      .subscribe(() => this.notificarUsuarioInativo());
+    this._inscricaoInatividade = timer(this.tempoLimiteMs).subscribe(() =>
+      this.notificarUsuarioInativo()
+    );
   }
 
   private iniciarContadorMonitoramento(): void {
     this._inscricaoTempoRestanteMonitoramento = interval(1000)
-      .pipe(
-        startWith(0),
-        take(this.tempoLimiteSegundos + 1)
-      )
-      .subscribe(segundoAtual => {
-        const segundosRestantes =
-          this.tempoLimiteSegundos - segundoAtual;
+      .pipe(startWith(0), take(this.tempoLimiteSegundos + 1))
+      .subscribe((segundoAtual) => {
+        const segundosRestantes = this.tempoLimiteSegundos - segundoAtual;
 
         this._ngZone.run(() => {
           this._tempoRestanteMonitoramentoUsuarioSubject$.next(
@@ -122,13 +122,9 @@ export class JusticaInatividadeUsuarioService {
     this._alertaAberto = true;
 
     this._inscricaoContador = interval(1000)
-      .pipe(
-        startWith(0),
-        take(this.tempoAlertaSegundos + 1)
-      )
-      .subscribe(segundoAtual => {
-        const segundosRestantes =
-          this.tempoAlertaSegundos - segundoAtual;
+      .pipe(startWith(0), take(this.tempoAlertaSegundos + 1))
+      .subscribe((segundoAtual) => {
+        const segundosRestantes = this.tempoAlertaSegundos - segundoAtual;
 
         this._ngZone.run(() => {
           this.atualizarDialogInatividade(segundosRestantes);
@@ -234,8 +230,7 @@ export class JusticaInatividadeUsuarioService {
       return;
     }
 
-    this._justicaDialogConfig.mensagem =
-      this.criarMensagemInatividade(segundosRestantes);
+    this._justicaDialogConfig.mensagem = this.criarMensagemInatividade(segundosRestantes);
   }
 
   private abrirDialogInatividade(segundosRestantes: number): void {
@@ -251,19 +246,16 @@ export class JusticaInatividadeUsuarioService {
       largura: '28rem'
     };
 
-    this._justicaDialogRef = this._justicaDialogService.abrir(
-      this._justicaDialogConfig
-    );
+    this._justicaDialogRef = this._justicaDialogService.abrir(this._justicaDialogConfig);
 
-    this._justicaDialogRef.afterClosed()
-      .subscribe(continuarSessao => {
-        this._justicaDialogRef = undefined;
-        this._justicaDialogConfig = undefined;
+    this._justicaDialogRef.afterClosed().subscribe((continuarSessao) => {
+      this._justicaDialogRef = undefined;
+      this._justicaDialogConfig = undefined;
 
-        if (continuarSessao) {
-          this.reiniciarMonitoramento();
-        }
-      });
+      if (continuarSessao) {
+        this.reiniciarMonitoramento();
+      }
+    });
   }
 
   private fecharDialogInatividade(): void {
@@ -309,9 +301,7 @@ export class JusticaInatividadeUsuarioService {
     }
 
     if (this.tempoAlertaMinutos >= this.tempoLimiteMinutos) {
-      throw new Error(
-        'tempoAlertaMinutos deve ser menor que tempoLimiteMinutos.'
-      );
+      throw new Error('tempoAlertaMinutos deve ser menor que tempoLimiteMinutos.');
     }
 
     if (!this.eventosMonitorados.length) {

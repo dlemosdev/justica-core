@@ -22,7 +22,7 @@ export class StringUtils {
     'pra',
     'pro',
     'para',
-    'com',
+    'com'
   ]);
 
   static capitalizar(texto: string): string {
@@ -42,9 +42,7 @@ export class StringUtils {
         const primeiraPalavra = indice === 0;
         const ultimaPalavra = indice === palavras.length - 1;
         const devePermanecerMinuscula =
-          !primeiraPalavra &&
-          !ultimaPalavra &&
-          StringUtils.PALAVRAS_MINUSCULAS_PT_BR.has(palavra);
+          !primeiraPalavra && !ultimaPalavra && StringUtils.PALAVRAS_MINUSCULAS_PT_BR.has(palavra);
 
         if (devePermanecerMinuscula) {
           return palavra;
@@ -60,6 +58,8 @@ export class StringUtils {
       return palavra;
     }
 
-    return palavra.charAt(0).toLocaleUpperCase('pt-BR') + palavra.slice(1).toLocaleLowerCase('pt-BR');
+    return (
+      palavra.charAt(0).toLocaleUpperCase('pt-BR') + palavra.slice(1).toLocaleLowerCase('pt-BR')
+    );
   }
 }

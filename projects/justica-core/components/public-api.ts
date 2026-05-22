@@ -1,5 +1,1 @@
-export {
-  JusticaDialogComponent,
-  JusticaDialogModule,
-  JusticaDialogRef
-} from '@justica/core';
+export {JusticaDialogComponent, JusticaDialogModule, JusticaDialogRef} from '@justica/core';

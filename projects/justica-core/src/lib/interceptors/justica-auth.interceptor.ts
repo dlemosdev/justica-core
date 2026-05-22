@@ -1,5 +1,11 @@
 import {Inject, Injectable} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest
+} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
 
@@ -18,18 +24,15 @@ export class JusticaAuthInterceptor implements HttpInterceptor {
     private readonly _window: JusticaWindow
   ) {}
 
-  intercept(
-    requisicao: HttpRequest<unknown>,
-    next: HttpHandler
-  ): Observable<HttpEvent<unknown>> {
+  intercept(requisicao: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (this.deveIgnorarToken(requisicao)) {
       return next.handle(requisicao);
     }
 
-    const requisicaoAutenticada = this.adicionarHeaders(requisicao)
+    const requisicaoAutenticada = this.adicionarHeaders(requisicao);
 
     return next.handle(requisicaoAutenticada).pipe(
-      catchError(erro => {
+      catchError((erro) => {
         if (erro instanceof HttpErrorResponse && erro.status === 401) {
           return this.tratarNaoAutorizado(requisicao, next);
         }
@@ -42,33 +45,27 @@ export class JusticaAuthInterceptor implements HttpInterceptor {
     requisicao: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    return this._justicaRefreshTokenService
-      .renovarToken()
-      .pipe(
-        /**
-         * Reexecuta request original
-         */
-        switchMap(() => {
-          const requestAtualizada =
-            this.adicionarHeaders(requisicao)
-          return next.handle(requestAtualizada);
-        }),
-        /**
-         * Falha no refresh
-         */
-        catchError((refreshErro) => {
-          this._justicaAuthService.realizarLogout();
-          return throwError(() => refreshErro);
-        })
-      );
+    return this._justicaRefreshTokenService.renovarToken().pipe(
+      /**
+       * Reexecuta request original
+       */
+      switchMap(() => {
+        const requestAtualizada = this.adicionarHeaders(requisicao);
+        return next.handle(requestAtualizada);
+      }),
+      /**
+       * Falha no refresh
+       */
+      catchError((refreshErro) => {
+        this._justicaAuthService.realizarLogout();
+        return throwError(() => refreshErro);
+      })
+    );
   }
 
-  private adicionarHeaders(
-    requisicao: HttpRequest<unknown>,
-  ): HttpRequest<unknown> {
-
+  private adicionarHeaders(requisicao: HttpRequest<unknown>): HttpRequest<unknown> {
     const token = this._justicaTokenStorageService.obterToken();
-    if(!token) {
+    if (!token) {
       return requisicao;
     }
 

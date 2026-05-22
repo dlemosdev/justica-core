@@ -1,15 +1,9 @@
 {
   "root": true,
-  "ignorePatterns": [
-    "dist/**/*",
-    "node_modules/**/*",
-    "coverage/**/*"
-  ],
+  "ignorePatterns": ["dist/**/*", "node_modules/**/*", "coverage/**/*"],
   "overrides": [
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "parserOptions": {
         "project": [
           "projects/justica-core/tsconfig.lib.json",
@@ -84,10 +78,7 @@
           }
         ],
         "curly": "error",
-        "eqeqeq": [
-          "error",
-          "smart"
-        ],
+        "eqeqeq": ["error", "smart"],
         "max-len": [
           "warn",
           {
@@ -100,10 +91,7 @@
         "no-console": [
           "error",
           {
-            "allow": [
-              "warn",
-              "error"
-            ]
+            "allow": ["warn", "error"]
           }
         ],
         "no-fallthrough": "error",
@@ -170,19 +158,12 @@
             "avoidEscape": true
           }
         ],
-        "semi": [
-          "error",
-          "always"
-        ]
+        "semi": ["error", "always"]
       }
     },
     {
-      "files": [
-        "*.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended"
-      ],
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
       "rules": {}
     }
   ]

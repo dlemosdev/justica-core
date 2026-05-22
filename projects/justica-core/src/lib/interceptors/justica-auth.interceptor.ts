@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
   HttpErrorResponse,
   HttpEvent,
@@ -10,13 +10,18 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 
 import { JusticaRefreshTokenService } from '../services/justica-refresh-token.service';
-import { JusticaTokenService } from '../services/justica-token.service';
+import { JusticaAuthService } from '../services/justica-auth.service';
+import { JusticaTokenStorageService } from '../services/justica-token-storage.service';
+import { JUSTICA_WINDOW, JusticaWindow } from '../tokens/justica-window.token';
 
 @Injectable()
 export class JusticaAuthInterceptor implements HttpInterceptor {
   constructor(
-    private readonly _justicaTokenService: JusticaTokenService,
-    private readonly _justicaRefreshTokenService: JusticaRefreshTokenService
+    private readonly _justicaTokenStorageService: JusticaTokenStorageService,
+    private readonly _justicaRefreshTokenService: JusticaRefreshTokenService,
+    private readonly _justicaAuthService: JusticaAuthService,
+    @Inject(JUSTICA_WINDOW)
+    private readonly _window: JusticaWindow
   ) {}
 
   intercept(
@@ -27,18 +32,14 @@ export class JusticaAuthInterceptor implements HttpInterceptor {
       return next.handle(requisicao);
     }
 
-    const accessToken = this._justicaTokenService.obterAccessToken();
-    const requisicaoAutenticada = accessToken
-      ? this.adicionarHeaders(requisicao, accessToken)
-      : requisicao;
+    const requisicaoAutenticada = this.adicionarHeaders(requisicao)
 
     return next.handle(requisicaoAutenticada).pipe(
       catchError(erro => {
         if (erro instanceof HttpErrorResponse && erro.status === 401) {
           return this.tratarNaoAutorizado(requisicao, next);
         }
-
-        return throwError(erro);
+        return throwError(() => erro);
       })
     );
   }
@@ -48,28 +49,38 @@ export class JusticaAuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     return this._justicaRefreshTokenService
-      .renovarTokenControlado()
+      .renovarToken()
       .pipe(
-        switchMap(novoAccessToken => {
-          const novaRequisicao =
-            this.adicionarHeaders(requisicao, novoAccessToken);
-
-          return next.handle(novaRequisicao);
+        /**
+         * Reexecuta request original
+         */
+        switchMap(() => {
+          const requestAtualizada =
+            this.adicionarHeaders(requisicao)
+          return next.handle(requestAtualizada);
         }),
-        catchError(erro => {
-          this._justicaTokenService.limparSessao();
-          return throwError(erro);
+        /**
+         * Falha no refresh
+         */
+        catchError((refreshErro) => {
+          this._justicaAuthService.realizarLogout();
+          return throwError(() => refreshErro);
         })
       );
   }
 
   private adicionarHeaders(
     requisicao: HttpRequest<unknown>,
-    accessToken: string
   ): HttpRequest<unknown> {
+
+    const token = this._justicaTokenStorageService.obterToken();
+    if(!token) {
+      return requisicao;
+    }
+
     return requisicao.clone({
       setHeaders: {
-        Authorization: 'Bearer ' + accessToken,
+        Authorization: 'Bearer ' + token,
         ContentType: 'application/json',
         'X-XSRF-TOKEN': this.obterCookie('XSRF-TOKEN')
       }
@@ -78,16 +89,12 @@ export class JusticaAuthInterceptor implements HttpInterceptor {
 
   private deveIgnorarToken(requisicao: HttpRequest<unknown>): boolean {
     const url = requisicao.url.toLowerCase();
-
-    return url.indexOf('/auth/login') >= 0 ||
-      url.indexOf('/auth/refresh') >= 0 ||
-      url.indexOf('/login') >= 0 ||
-      url.indexOf('/refresh') >= 0;
+    return url.includes('/token');
   }
 
   private obterCookie(nome: string): string {
     const chave = nome + '=';
-    const todos = decodeURIComponent(document.cookie || '');
+    const todos = decodeURIComponent(this._window.document.cookie || '');
     for (const parte of todos.split(';')) {
       const c = parte.trim();
       if (c.startsWith(chave)) {

@@ -1,62 +1,61 @@
-import { Inject, Injectable } from '@angular/core';
+import {Injectable, Inject, Optional} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
-import { catchError, filter, finalize, map, take, tap } from 'rxjs/operators';
+import {
+  Observable,
+  throwError
+} from 'rxjs';
 
-import { JusticaCoreConfig } from '../models/justica-core-config';
-import { JusticaRefreshTokenRequest } from '../models/justica-refresh-token-request';
-import { JusticaRefreshTokenResponse } from '../models/justica-refresh-token-response';
-import { JUSTICA_CORE_CONFIG } from '../tokens/justica-core-config.token';
-import { JusticaTokenService } from './justica-token.service';
+import {
+  catchError,
+  finalize,
+  shareReplay,
+  tap
+} from 'rxjs/operators';
+import {JusticaTokenStorageService} from './justica-token-storage.service';
+import {JUSTICA_CORE_CONFIG} from '../tokens/justica-core-config.token';
+import {JusticaCoreConfig} from '../models/justica-core-config';
+import {JusticaRefreshTokenResponse} from '../models/justica-refresh-token-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JusticaRefreshTokenService {
-  private _renovandoToken = false;
 
-  private readonly _tokenRenovadoSubject$ =
-    new BehaviorSubject<string | null>(null);
+  private readonly urlRefreshToken: string;
+
+  /**
+   * Guarda refresh em andamento.
+   * Todas requests compartilham esta mesma observable.
+   */
+  private refreshTokenEmAndamento$?: Observable<JusticaRefreshTokenResponse>;
 
   constructor(
-    private readonly _http: HttpClient,
-    private readonly _justicaTokenService: JusticaTokenService,
+    @Optional()
     @Inject(JUSTICA_CORE_CONFIG)
-    private readonly _config: JusticaCoreConfig
-  ) {}
-
-  renovarTokenControlado(): Observable<string> {
-    if (!this._renovandoToken) {
-      this._renovandoToken = true;
-      this._tokenRenovadoSubject$.next(null);
-
-      return this.renovarToken().pipe(
-        tap(accessToken => {
-          this._tokenRenovadoSubject$.next(accessToken);
-        }),
-        finalize(() => {
-          this._renovandoToken = false;
-        })
-      );
-    }
-
-    return this._tokenRenovadoSubject$.pipe(
-      filter(token => token !== null),
-      take(1),
-      map(token => token as string)
-    );
+    private readonly _config: JusticaCoreConfig,
+    private readonly _http: HttpClient,
+    private readonly _tokenStorageService: JusticaTokenStorageService
+  ) {
+    this.urlRefreshToken = `${this._config.urlKeycloack}/protocol/openid-connect/token`;
   }
 
-  private renovarToken(): Observable<string> {
-    const refreshToken = this._justicaTokenService.obterRefreshToken();
+  renovarToken(): Observable<JusticaRefreshTokenResponse> {
+    /**
+     * Se já existe refresh em andamento:
+     * reaproveita mesma request HTTP.
+     */
+    if (this.refreshTokenEmAndamento$) {
+      return this.refreshTokenEmAndamento$;
+    }
+
+    const refreshToken = this._tokenStorageService.obterRefreshToken();
 
     if (!refreshToken) {
-      this._justicaTokenService.limparSessao();
-      return throwError(new Error('Refresh token nao encontrado.'));
+      return throwError(() => new Error('Refresh token não encontrado.'));
     }
 
     if (!this._config.urlKeycloack) {
-      return throwError(new Error('URL de refresh token nao configurada.'));
+      return throwError(new Error('URL de refresh token não configurada.'));
     }
 
     const params = new HttpParams()
@@ -68,22 +67,40 @@ export class JusticaRefreshTokenService {
       'Content-Type': 'application/x-www-form-urlencoded'
     });
 
-    return this._http.post<JusticaRefreshTokenResponse>(
-      `${this._config.urlKeycloack}/protocol/openid-connect/token`,
-      params.toString(),
-      { headers }
-    ).pipe(
-      tap(resposta => {
-        this._justicaTokenService.salvarTokens({
-          accessToken: resposta.accessToken,
-          refreshToken: resposta.refreshToken || refreshToken
-        });
-      }),
-      map(resposta => resposta.accessToken),
-      catchError(erro => {
-        this._justicaTokenService.limparSessao();
-        return throwError(erro);
-      })
-    );
+    this.refreshTokenEmAndamento$ = this._http
+      .post<JusticaRefreshTokenResponse>(
+        this.urlRefreshToken,
+        params,
+        {headers},
+      )
+      .pipe(
+        tap((response) => {
+          this._tokenStorageService.salvarTokens(
+            response.access_token,
+            response.refresh_token
+          );
+        }),
+
+        catchError((erro) => {
+          this._tokenStorageService.limparTokens();
+          return throwError(() => erro);
+        }),
+
+        finalize(() => {
+          /**
+           * Libera nova renovação futura
+           */
+          this.refreshTokenEmAndamento$ = undefined;
+        }),
+
+        /**
+         * Compartilha mesma execução HTTP
+         * para múltiplos subscribers.
+         */
+        shareReplay(1)
+      );
+
+    return this.refreshTokenEmAndamento$;
   }
 }
+

@@ -1,51 +1,51 @@
 import { Injectable } from '@angular/core';
 
 import { JusticaUsuarioLogado } from '../models/justica-usuario-logado';
-import { JusticaJwtService } from './justica-jwt.service';
-import { JusticaStorageTokenService } from './justica-storage-token.service';
+import { JusticaTokenUtilService } from './justica-token-util.service';
+import {JusticaTokenStorageService} from './justica-token-storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JusticaUsuarioService {
   private _usuarioAtual?: JusticaUsuarioLogado;
-  private _accessTokenAtual?: string;
+  private _tokenAtual?: string;
 
   constructor(
-    private readonly _justicaJwtService: JusticaJwtService,
-    private readonly _justicaStorageTokenService: JusticaStorageTokenService
+    private readonly _justicaJwtUtilService: JusticaTokenUtilService,
+    private readonly _justicaTokenStorageService: JusticaTokenStorageService
   ) {}
 
   obterUsuario(): JusticaUsuarioLogado | null {
-    const accessToken = this._justicaStorageTokenService.obterAccessToken();
+    const token = this._justicaTokenStorageService.obterToken();
 
-    if (this._usuarioAtual && this._accessTokenAtual === accessToken) {
+    if (this._usuarioAtual && this._tokenAtual === token) {
       return this._usuarioAtual;
     }
 
-    const payload = this._justicaJwtService.obterPayload(accessToken);
+    const payloadDecodificado = this._justicaJwtUtilService.decodificarToken(token);
 
-    if (!payload) {
+    if (!payloadDecodificado) {
       this.limparCache();
       return null;
     }
 
     if (
-      payload.usuario == null ||
-      payload.local == null ||
-      !payload.nome ||
-      !payload.nomeLocal
+      payloadDecodificado.usuario == null ||
+      payloadDecodificado.local == null ||
+      !payloadDecodificado.nome ||
+      !payloadDecodificado.nomeLocal
     ) {
       this.limparCache();
       return null;
     }
 
-    this._accessTokenAtual = accessToken || undefined;
+    this._tokenAtual = token || undefined;
     this._usuarioAtual = {
-      seqUsuario: Number(payload.usuario),
-      seqLocal: Number(payload.local),
-      nomeUsuario: String(payload.nome),
-      nomeLocal: String(payload.nomeLocal)
+      seqUsuario: Number(payloadDecodificado.usuario),
+      seqLocal: Number(payloadDecodificado.local),
+      nomeUsuario: String(payloadDecodificado.nome),
+      nomeLocal: String(payloadDecodificado.nomeLocal)
     };
 
     return this._usuarioAtual;
@@ -77,6 +77,6 @@ export class JusticaUsuarioService {
 
   limparCache(): void {
     this._usuarioAtual = undefined;
-    this._accessTokenAtual = undefined;
+    this._tokenAtual = undefined;
   }
 }

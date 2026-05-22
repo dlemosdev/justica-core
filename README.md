@@ -13,6 +13,8 @@ A lib `@justica/core`:
 - expõe dados do usuário logado;
 - adiciona `Authorization: Bearer` nas requisições;
 - executa refresh preventivo;
+- monitora inatividade do usuario com dialogo e contador regressivo;
+- fornece componentes visuais simples para fluxos corporativos;
 - trata fallback por erro `401`;
 - evita múltiplos refresh simultâneos;
 - mantém cache em memória;
@@ -61,6 +63,7 @@ Principais versões do workspace:
   projects/justica-core/
     src/lib/              implementação interna da lib
     src/public-api.ts     API primária do pacote @justica/core
+    components/           secondary entry point @justica/core/components
     guards/               secondary entry point @justica/core/guards
     interceptors/         secondary entry point @justica/core/interceptors
     models/               secondary entry point @justica/core/models
@@ -81,6 +84,7 @@ Os secondary entry points existem para consumidores que preferem imports segment
 
 ```ts
 import { JusticaAutenticadoGuard } from '@justica/core/guards';
+import { JusticaDialogModule } from '@justica/core/components';
 import { JusticaCoreConfig } from '@justica/core/models';
 import { JusticaUsuarioService } from '@justica/core/services';
 ```
@@ -165,5 +169,72 @@ constructor(
   private readonly _justicaSessaoService: JusticaSessaoService
 ) {
   this._justicaSessaoService.iniciarMonitoramento();
+}
+```
+
+## Monitoramento de Inatividade
+
+O pacote possui um monitoramento centralizado de inatividade do usuario. O
+alerta visual usa o `JusticaDialogService`, mantendo um unico padrao de dialogo
+na aplicacao. O tempo padrao e de 30 minutos para expirar a sessao, com alerta
+nos 5 minutos finais. O consumidor pode sobrescrever os tempos e os eventos
+monitorados por provider.
+
+```ts
+import { NgModule } from '@angular/core';
+import { JusticaDialogModule } from '@justica/core/components';
+import {
+  JUSTICA_INATIVIDADE_USUARIO_CONFIG_PADRAO
+} from '@justica/core/models';
+import {
+  JUSTICA_INATIVIDADE_USUARIO_CONFIG
+} from '@justica/core/tokens';
+
+@NgModule({
+  imports: [
+    JusticaDialogModule
+  ],
+  providers: [
+    {
+      provide: JUSTICA_INATIVIDADE_USUARIO_CONFIG,
+      useValue: {
+        ...JUSTICA_INATIVIDADE_USUARIO_CONFIG_PADRAO,
+        tempoLimiteMinutos: 60,
+        tempoAlertaMinutos: 10
+      }
+    }
+  ]
+})
+export class AppModule {}
+```
+
+No componente raiz, inicie o monitoramento e assine o evento de inatividade:
+
+```ts
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { JusticaInatividadeUsuarioService } from '@justica/core/services';
+
+export class AppComponent implements OnInit, OnDestroy {
+  private readonly _subscription = new Subscription();
+
+  constructor(
+    private readonly _justicaInatividadeUsuarioService: JusticaInatividadeUsuarioService
+  ) {}
+
+  ngOnInit(): void {
+    this._justicaInatividadeUsuarioService.iniciarMonitoramento();
+
+    this._subscription.add(
+      this._justicaInatividadeUsuarioService.usuarioInativo$
+        .subscribe(() => {
+          this.realizarLogoutPorInatividade();
+        })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this._subscription.unsubscribe();
+  }
 }
 ```

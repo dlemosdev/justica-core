@@ -6,7 +6,7 @@ import {
 } from '@angular/router';
 
 import { JusticaCoreConfig } from '../models/justica-core-config';
-import { JusticaTokenService } from '../services/justica-token.service';
+import { JusticaTokenStorageService } from '../services/justica-token-storage.service';
 import { JUSTICA_CORE_CONFIG } from '../tokens/justica-core-config.token';
 
 @Injectable({
@@ -14,14 +14,14 @@ import { JUSTICA_CORE_CONFIG } from '../tokens/justica-core-config.token';
 })
 export class JusticaAutenticadoGuard implements CanActivate {
   constructor(
-    private readonly _justicaTokenService: JusticaTokenService,
+    private readonly _justicaTokenStorageService: JusticaTokenStorageService,
     private readonly _router: Router,
     @Inject(JUSTICA_CORE_CONFIG)
     private readonly _config: JusticaCoreConfig
   ) {}
 
   canActivate(): boolean | UrlTree {
-    if (this._justicaTokenService.possuiAccessTokenValido()) {
+    if (this._justicaTokenStorageService.possuiTokens()) {
       return true;
     }
 

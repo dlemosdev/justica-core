@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import {InjectionToken, Provider} from '@angular/core';
 
 import {
   criarJusticaCoreConfig,
@@ -22,3 +22,12 @@ export const JUSTICA_CORE_CONFIG = new InjectionToken<JusticaCoreConfig>(
     factory: criarJusticaCoreConfig
   }
 );
+
+export function provideJusticaCoreConfig(config?: JusticaCoreConfig): Provider[] {
+  return [
+    {
+      provide: JUSTICA_CORE_CONFIG,
+      useValue: criarJusticaCoreConfig(config)
+    }
+  ];
+}

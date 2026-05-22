@@ -1,0 +1,77 @@
+<div class="justica-dialog-backdrop" (click)="fecharPorBackdrop()">
+  <div
+    class="justica-dialog"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-labelledby]="config.titulo ? 'justica-dialog-titulo' : null"
+    [attr.aria-describedby]="config.mensagem ? 'justica-dialog-mensagem' : null"
+    [style.width]="config.largura"
+    (click)="impedirFechamento($event)"
+  >
+    <div
+      class="justica-dialog__icone"
+      [ngClass]="classeIcone"
+      aria-hidden="true"
+    >
+      {{ simboloIcone }}
+    </div>
+
+    <h2
+      id="justica-dialog-titulo"
+      class="justica-dialog__titulo"
+      *ngIf="config.titulo"
+    >
+      {{ config.titulo }}
+    </h2>
+
+    <p
+      id="justica-dialog-mensagem"
+      class="justica-dialog__mensagem"
+      *ngIf="config.mensagem"
+    >
+      {{ config.mensagem }}
+    </p>
+
+    <div class="justica-dialog__acoes" *ngIf="exibirAcoes">
+      <ng-container
+        *ngIf="config.exibirCancelar && config.componenteBotaoCancelar"
+      >
+        <ng-container
+          *ngComponentOutlet="config.componenteBotaoCancelar; injector: injector"
+        ></ng-container>
+      </ng-container>
+
+      <button
+        *ngIf="config.exibirCancelar && !config.componenteBotaoCancelar"
+        type="button"
+        class="justica-dialog__botao justica-dialog__botao--cancelar"
+        (click)="cancelar()"
+      >
+        {{ config.textoCancelar }}
+      </button>
+
+      <ng-container *ngIf="config.componenteOutroBotao">
+        <ng-container
+          *ngComponentOutlet="config.componenteOutroBotao; injector: injector"
+        ></ng-container>
+      </ng-container>
+
+      <ng-container
+        *ngIf="config.exibirConfirmar && config.componenteBotaoConfirmar"
+      >
+        <ng-container
+          *ngComponentOutlet="config.componenteBotaoConfirmar; injector: injector"
+        ></ng-container>
+      </ng-container>
+
+      <button
+        *ngIf="config.exibirConfirmar && !config.componenteBotaoConfirmar"
+        type="button"
+        class="justica-dialog__botao justica-dialog__botao--confirmar"
+        (click)="confirmar()"
+      >
+        {{ config.textoConfirmar }}
+      </button>
+    </div>
+  </div>
+</div>

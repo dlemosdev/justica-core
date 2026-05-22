@@ -1,8 +1,10 @@
 export {
-  JusticaJwtService,
+  JusticaAuthService,
+  JusticaDialogService,
+  JusticaInatividadeUsuarioService,
   JusticaRefreshTokenService,
-  JusticaSessaoService,
-  JusticaStorageTokenService,
-  JusticaTokenService,
+  JusticaSessaoMonitorService,
+  JusticaTokenStorageService,
+  JusticaTokenUtilService,
   JusticaUsuarioService
 } from '@justica/core';

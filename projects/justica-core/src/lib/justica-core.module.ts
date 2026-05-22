@@ -1,16 +1,10 @@
-import {
-  ModuleWithProviders,
-  NgModule
-} from '@angular/core';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
 
-import { JusticaDialogModule } from './components/justica-dialog/justica-dialog.module';
-import { JusticaAuthInterceptor } from './interceptors/justica-auth.interceptor';
-import {
-  criarJusticaCoreConfig,
-  JusticaCoreConfig
-} from './models/justica-core-config';
-import {JUSTICA_CORE_CONFIG, provideJusticaCoreConfig} from './tokens/justica-core-config.token';
+import {JusticaDialogModule} from './components/justica-dialog/justica-dialog.module';
+import {JusticaAuthInterceptor} from './interceptors/justica-auth.interceptor';
+import {JusticaCoreConfig} from './models/justica-core-config';
+import {provideJusticaCoreConfig} from './tokens/justica-core-config.token';
 import {JusticaBotaoSessaoExpiradaComponent} from './services/justica-sessao-monitor.service';
 
 @NgModule({

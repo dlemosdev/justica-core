@@ -1,13 +1,9 @@
-import { Inject, Injectable } from '@angular/core';
-import {
-  CanActivate,
-  Router,
-  UrlTree
-} from '@angular/router';
+import {Inject, Injectable} from '@angular/core';
+import {CanActivate, Router, UrlTree} from '@angular/router';
 
-import { JusticaCoreConfig } from '../models/justica-core-config';
-import { JusticaTokenStorageService } from '../services/justica-token-storage.service';
-import { JUSTICA_CORE_CONFIG } from '../tokens/justica-core-config.token';
+import {JusticaCoreConfig} from '../models/justica-core-config';
+import {JusticaTokenStorageService} from '../services/justica-token-storage.service';
+import {JUSTICA_CORE_CONFIG} from '../tokens/justica-core-config.token';
 
 @Injectable({
   providedIn: 'root'

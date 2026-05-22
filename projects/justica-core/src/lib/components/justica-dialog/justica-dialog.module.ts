@@ -1,7 +1,7 @@
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NgModule} from '@angular/core';
 
-import { JusticaDialogComponent } from './justica-dialog.component';
+import {JusticaDialogComponent} from './justica-dialog.component';
 
 @NgModule({
   declarations: [

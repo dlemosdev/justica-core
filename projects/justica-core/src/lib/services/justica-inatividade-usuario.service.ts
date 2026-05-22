@@ -1,17 +1,15 @@
-import { Inject, Injectable, NgZone } from '@angular/core';
-import { EMPTY, fromEvent, interval, merge, Observable, ReplaySubject, Subject, Subscription, timer } from 'rxjs';
-import { catchError, finalize, startWith, take } from 'rxjs/operators';
+import {Inject, Injectable, NgZone} from '@angular/core';
+import {EMPTY, fromEvent, interval, merge, Observable, ReplaySubject, Subject, Subscription, timer} from 'rxjs';
+import {catchError, finalize, startWith, take} from 'rxjs/operators';
 
-import {
-  JusticaInatividadeUsuarioConfig
-} from '../models/justica-inatividade-usuario-config';
-import { JUSTICA_INATIVIDADE_USUARIO_CONFIG } from '../tokens/justica-inatividade-usuario-config.token';
-import { JusticaDialogConfig } from '../models/justica-dialog-config';
-import { JusticaDialogRef } from '../components/justica-dialog/justica-dialog-ref';
-import { JusticaDialogService } from './justica-dialog.service';
-import { JusticaTokenUtilService } from './justica-token-util.service';
-import { JusticaRefreshTokenService } from './justica-refresh-token.service';
-import { JusticaTokenStorageService } from './justica-token-storage.service';
+import {JusticaInatividadeUsuarioConfig} from '../models/justica-inatividade-usuario-config';
+import {JUSTICA_INATIVIDADE_USUARIO_CONFIG} from '../tokens/justica-inatividade-usuario-config.token';
+import {JusticaDialogConfig} from '../models/justica-dialog-config';
+import {JusticaDialogRef} from '../components/justica-dialog/justica-dialog-ref';
+import {JusticaDialogService} from './justica-dialog.service';
+import {JusticaTokenUtilService} from './justica-token-util.service';
+import {JusticaRefreshTokenService} from './justica-refresh-token.service';
+import {JusticaTokenStorageService} from './justica-token-storage.service';
 
 @Injectable({
   providedIn: 'root'

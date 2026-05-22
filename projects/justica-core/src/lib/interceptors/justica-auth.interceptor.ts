@@ -1,18 +1,12 @@
-import { Inject, Injectable } from '@angular/core';
-import {
-  HttpErrorResponse,
-  HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
-  HttpRequest
-} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import {Inject, Injectable} from '@angular/core';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Observable, throwError} from 'rxjs';
+import {catchError, switchMap} from 'rxjs/operators';
 
-import { JusticaRefreshTokenService } from '../services/justica-refresh-token.service';
-import { JusticaAuthService } from '../services/justica-auth.service';
-import { JusticaTokenStorageService } from '../services/justica-token-storage.service';
-import { JUSTICA_WINDOW, JusticaWindow } from '../tokens/justica-window.token';
+import {JusticaRefreshTokenService} from '../services/justica-refresh-token.service';
+import {JusticaAuthService} from '../services/justica-auth.service';
+import {JusticaTokenStorageService} from '../services/justica-token-storage.service';
+import {JUSTICA_WINDOW, JusticaWindow} from '../tokens/justica-window.token';
 
 @Injectable()
 export class JusticaAuthInterceptor implements HttpInterceptor {

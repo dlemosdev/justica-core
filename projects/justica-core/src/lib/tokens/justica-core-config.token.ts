@@ -1,9 +1,6 @@
 import {InjectionToken, Provider} from '@angular/core';
 
-import {
-  criarJusticaCoreConfig,
-  JusticaCoreConfig
-} from '../models/justica-core-config';
+import {criarJusticaCoreConfig, JusticaCoreConfig} from '../models/justica-core-config';
 
 export {
   JUSTICA_ACCESS_TOKEN_KEY,

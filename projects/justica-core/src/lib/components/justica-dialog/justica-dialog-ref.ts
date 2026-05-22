@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 
 export class JusticaDialogRef<T = boolean> {
   private readonly _resultadoSubject = new Subject<T>();

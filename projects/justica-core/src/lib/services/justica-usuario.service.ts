@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
-import { JusticaUsuarioLogado } from '../models/justica-usuario-logado';
-import { JusticaTokenUtilService } from './justica-token-util.service';
+import {JusticaUsuarioLogado} from '../models/justica-usuario-logado';
+import {JusticaTokenUtilService} from './justica-token-util.service';
 import {JusticaTokenStorageService} from './justica-token-storage.service';
 
 @Injectable({

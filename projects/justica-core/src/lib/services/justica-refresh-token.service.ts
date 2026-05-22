@@ -1,16 +1,8 @@
-import {Injectable, Inject, Optional} from '@angular/core';
+import {Inject, Injectable, Optional} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {
-  Observable,
-  throwError
-} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 
-import {
-  catchError,
-  finalize,
-  shareReplay,
-  tap
-} from 'rxjs/operators';
+import {catchError, finalize, shareReplay, tap} from 'rxjs/operators';
 import {JusticaTokenStorageService} from './justica-token-storage.service';
 import {JUSTICA_CORE_CONFIG} from '../tokens/justica-core-config.token';
 import {JusticaCoreConfig} from '../models/justica-core-config';

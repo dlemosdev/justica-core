@@ -1,15 +1,8 @@
-import {
-  Component,
-  HostListener,
-  Inject,
-  Injector,
-  OnDestroy,
-  OnInit
-} from '@angular/core';
+import {Component, HostListener, Inject, Injector, OnDestroy, OnInit} from '@angular/core';
 
-import { JusticaDialogConfig } from '../../models/justica-dialog-config';
-import { JusticaDialogRef } from './justica-dialog-ref';
-import { JUSTICA_WINDOW, JusticaWindow } from '../../tokens/justica-window.token';
+import {JusticaDialogConfig} from '../../models/justica-dialog-config';
+import {JusticaDialogRef} from './justica-dialog-ref';
+import {JUSTICA_WINDOW, JusticaWindow} from '../../tokens/justica-window.token';
 
 @Component({
   selector: 'justica-dialog',

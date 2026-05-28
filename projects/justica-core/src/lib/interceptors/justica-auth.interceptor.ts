@@ -1,5 +1,6 @@
-import {Inject, Injectable} from '@angular/core';
+import {Inject, Injectable, Provider} from '@angular/core';
 import {
+  HTTP_INTERCEPTORS,
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
@@ -13,6 +14,16 @@ import {JusticaRefreshTokenService} from '../services/justica-refresh-token.serv
 import {JusticaAuthService} from '../services/justica-auth.service';
 import {JusticaTokenStorageService} from '../services/justica-token-storage.service';
 import {JUSTICA_WINDOW, JusticaWindow} from '../tokens/justica-window.token';
+
+export function provideJusticaAuthInterceptor(): Provider[] {
+  return [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JusticaAuthInterceptor,
+      multi: true
+    }
+  ];
+}
 
 @Injectable()
 export class JusticaAuthInterceptor implements HttpInterceptor {

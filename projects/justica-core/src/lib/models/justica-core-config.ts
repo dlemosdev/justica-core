@@ -1,4 +1,5 @@
 export interface JusticaCoreConfig {
+  modulo?: string;
   urlApi?: string;
   urlKeycloack?: string;
   rotaLogin?: string;

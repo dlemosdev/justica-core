@@ -41,11 +41,21 @@ export interface JusticaNavigator {
 
 export interface JusticaDocumentBody {
   appendChild(elemento: unknown): unknown;
+  removeChild(elemento: unknown): unknown;
 }
 
 export interface JusticaDocument {
   cookie: string;
   readonly body: JusticaDocumentBody;
+  createElement(tagName: 'a'): JusticaHtmlAnchorElement;
+  createElement(tagName: string): unknown;
+}
+
+export interface JusticaHtmlAnchorElement {
+  download: string;
+  href: string;
+  click(): void;
+  setAttribute(nome: string, valor: string): void;
 }
 
 export interface JusticaWindowEvent {

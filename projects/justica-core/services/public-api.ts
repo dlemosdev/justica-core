@@ -1,6 +1,7 @@
 export {
   JusticaAuthService,
   JusticaInatividadeUsuarioService,
+  JusticaLogErroService,
   JusticaRefreshTokenService,
   JusticaSessaoMonitorService,
   JusticaTokenStorageService,

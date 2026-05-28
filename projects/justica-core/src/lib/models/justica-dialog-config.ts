@@ -21,3 +21,12 @@ export interface JusticaDialogConfig {
 
   largura?: string;
 }
+
+export const JUSTICA_DIALOG_CONFIG_PADRAO: JusticaDialogConfig = {};
+
+export function criarJusticaDialogConfig(config: JusticaDialogConfig): JusticaDialogConfig {
+  return {
+    ...JUSTICA_DIALOG_CONFIG_PADRAO,
+    ...config
+  };
+}

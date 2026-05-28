@@ -1,30 +1,13 @@
-import {Component, Inject, Injectable, OnDestroy} from '@angular/core';
+import {Inject, Injectable, OnDestroy} from '@angular/core';
 import {Subscription, timer} from 'rxjs';
 import {JusticaTokenStorageService} from './justica-token-storage.service';
 import {JusticaTokenUtilService} from './justica-token-util.service';
 import {JusticaRefreshTokenService} from './justica-refresh-token.service';
 import {JUSTICA_WINDOW, JusticaWindow} from '../tokens/justica-window.token';
-import {JusticaDialogService} from './justica-dialog.service';
+import {JusticaDialogService} from '../components/justica-dialog/justica-dialog.service';
 import {JusticaCoreConfig} from '../models/justica-core-config';
 import {JUSTICA_CORE_CONFIG} from '../tokens/justica-core-config.token';
-import {JusticaDialogRef} from '../components/justica-dialog/justica-dialog-ref';
 import {JusticaAuthService} from './justica-auth.service';
-
-@Component({
-  selector: 'justica-botao-sessao-expirada',
-  template: '<button type="button" (click)="confirmar()">OK</button>'
-})
-export class JusticaBotaoSessaoExpiradaComponent {
-  constructor(
-    private readonly _dialogRef: JusticaDialogRef,
-    private readonly _justicaAuthService: JusticaAuthService
-  ) {}
-
-  confirmar(): void {
-    this._dialogRef.fechar(true);
-    this._justicaAuthService.realizarLogout();
-  }
-}
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +24,7 @@ export class JusticaSessaoMonitorService implements OnDestroy {
     private readonly _justicaTokenStorageService: JusticaTokenStorageService,
     private readonly _justicaRefreshTokenService: JusticaRefreshTokenService,
     private readonly _justicaDialogService: JusticaDialogService,
+    private readonly _justicaAuthService: JusticaAuthService,
     @Inject(JUSTICA_CORE_CONFIG)
     private readonly _config: JusticaCoreConfig,
     @Inject(JUSTICA_WINDOW)
@@ -63,14 +47,7 @@ export class JusticaSessaoMonitorService implements OnDestroy {
     this.atualizarExpiracaoStorage('expRefreshToken', expiracaoRefreshToken);
 
     if (!token || !refreshToken) {
-      this._justicaDialogService
-        .warning('Atenção!', 'A sua sessão expirou! Realize novamente o login.')
-        .afterClosed()
-        .subscribe((confirmou) => {
-          if (confirmou) {
-            this.realizarLogout();
-          }
-        });
+      this.alertarSessaoExpirada();
       return;
     }
 
@@ -110,6 +87,11 @@ export class JusticaSessaoMonitorService implements OnDestroy {
     }
   }
 
+  private alertarSessaoExpirada(): void {
+    this.pararMonitoramento();
+    this._justicaAuthService.alertarSessaoExpirada();
+  }
+
   private alertarSessaoExpirando(): void {
     this._justicaDialogService
       .confirmar('Sua sessão irá expirar em breve', 'Deseja renovar sua sessão?')
@@ -127,7 +109,7 @@ export class JusticaSessaoMonitorService implements OnDestroy {
 
   private alertarNovoLogin(): void {
     this._justicaDialogService
-      .confirmar(
+      .info(
         'Sua sessão não pode mais ser renovada',
         `Você será redirecionado para o login em ${this._segundosParaRedirecionar} segundos.`
       )

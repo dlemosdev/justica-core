@@ -22,7 +22,7 @@ describe('JusticaAuthInterceptor', () => {
           useValue: {
             chaveAccessToken: 'justica.accessToken',
             chaveRefreshToken: 'justica.refreshToken',
-            urlRefreshToken: '/api/auth/refresh'
+            urlKeycloack: '/api/auth'
           }
         },
         {
@@ -62,11 +62,11 @@ describe('JusticaAuthInterceptor', () => {
       }
     );
 
-    const refresh = httpMock.expectOne('/api/auth/refresh');
+    const refresh = httpMock.expectOne('/api/auth/protocol/openid-connect/token');
     expect(refresh.request.headers.has('Authorization')).toBeFalse();
     refresh.flush({
-      accessToken: 'access-novo',
-      refreshToken: 'refresh-novo'
+      access_token: 'access-novo',
+      refresh_token: 'refresh-novo'
     });
 
     const segundaRequisicao = httpMock.expectOne('/api/processos');
@@ -74,10 +74,13 @@ describe('JusticaAuthInterceptor', () => {
     segundaRequisicao.flush({});
   });
 
-  it('deve limpar sessao quando refresh do 401 falhar', () => {
+  it('deve limpar sessao quando refresh do 401 falhar e bloquear novas chamadas', () => {
     let erroRecebido: HttpErrorResponse | undefined;
+    let requisicaoConcluida = false;
+    let novaRequisicaoConcluida = false;
 
     http.get('/api/processos').subscribe({
+      complete: () => (requisicaoConcluida = true),
       error: (erro) => (erroRecebido = erro)
     });
 
@@ -88,7 +91,7 @@ describe('JusticaAuthInterceptor', () => {
         statusText: 'Unauthorized'
       }
     );
-    httpMock.expectOne('/api/auth/refresh').flush(
+    httpMock.expectOne('/api/auth/protocol/openid-connect/token').flush(
       {},
       {
         status: 401,
@@ -96,7 +99,14 @@ describe('JusticaAuthInterceptor', () => {
       }
     );
 
-    expect(erroRecebido).toBeTruthy();
+    http.get('/api/processos').subscribe({
+      complete: () => (novaRequisicaoConcluida = true)
+    });
+
+    httpMock.expectNone('/api/processos');
+    expect(erroRecebido).toBeUndefined();
+    expect(requisicaoConcluida).toBeTrue();
+    expect(novaRequisicaoConcluida).toBeTrue();
     expect(localStorage.getItem('justica.accessToken')).toBeNull();
     expect(localStorage.getItem('justica.refreshToken')).toBeNull();
   });

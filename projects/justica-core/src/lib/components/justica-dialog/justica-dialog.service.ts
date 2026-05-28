@@ -7,11 +7,11 @@ import {
   Injector
 } from '@angular/core';
 
-import {JusticaDialogComponent} from '../components/justica-dialog/justica-dialog.component';
-import {JusticaDialogRef} from '../components/justica-dialog/justica-dialog-ref';
-import {JusticaDialogConfig} from '../models/justica-dialog-config';
-import {JUSTICA_DIALOG_CONFIG} from '../tokens/justica-dialog.token';
-import {JUSTICA_WINDOW, JusticaWindow} from '../tokens/justica-window.token';
+import {JusticaDialogComponent} from './justica-dialog.component';
+import {JusticaDialogRef} from './justica-dialog-ref';
+import {JusticaDialogConfig} from '../../models/justica-dialog-config';
+import {JUSTICA_DIALOG_CONFIG} from './justica-dialog.token';
+import {JUSTICA_WINDOW, JusticaWindow} from '../../tokens/justica-window.token';
 
 @Injectable({
   providedIn: 'root'

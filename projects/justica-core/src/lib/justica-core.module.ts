@@ -5,10 +5,9 @@ import {JusticaDialogModule} from './components/justica-dialog/justica-dialog.mo
 import {JusticaAuthInterceptor} from './interceptors/justica-auth.interceptor';
 import {JusticaCoreConfig} from './models/justica-core-config';
 import {provideJusticaCoreConfig} from './tokens/justica-core-config.token';
-import {JusticaBotaoSessaoExpiradaComponent} from './services/justica-sessao-monitor.service';
+import {provideJusticaInatividadeUsuarioConfig} from './tokens/justica-inatividade-usuario-config.token';
 
 @NgModule({
-  declarations: [JusticaBotaoSessaoExpiradaComponent],
   imports: [JusticaDialogModule],
   exports: [JusticaDialogModule]
 })
@@ -18,6 +17,9 @@ export class JusticaCoreModule {
       ngModule: JusticaCoreModule,
       providers: [
         provideJusticaCoreConfig(config),
+        provideJusticaInatividadeUsuarioConfig({
+          ...config.inatividadeUsuario,
+        }),
         {
           provide: HTTP_INTERCEPTORS,
           useClass: JusticaAuthInterceptor,

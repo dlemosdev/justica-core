@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import {Observable, throwError} from 'rxjs';
+import {EMPTY, Observable, throwError} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
 
 import {JusticaRefreshTokenService} from '../services/justica-refresh-token.service';
@@ -27,6 +27,10 @@ export class JusticaAuthInterceptor implements HttpInterceptor {
   intercept(requisicao: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (this.deveIgnorarToken(requisicao)) {
       return next.handle(requisicao);
+    }
+
+    if (this._justicaAuthService.logoutEmAndamento) {
+      return EMPTY;
     }
 
     const requisicaoAutenticada = this.adicionarHeaders(requisicao);
@@ -56,9 +60,9 @@ export class JusticaAuthInterceptor implements HttpInterceptor {
       /**
        * Falha no refresh
        */
-      catchError((refreshErro) => {
-        this._justicaAuthService.realizarLogout();
-        return throwError(() => refreshErro);
+      catchError((_) => {
+        this._justicaAuthService.alertarSessaoExpirada();
+        return EMPTY;
       })
     );
   }

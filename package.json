@@ -18,7 +18,7 @@
     "lint-staged": "lint-staged",
     "commitlint": "commitlint --edit",
     "publish:local": "npm run build:justica-core && npm publish ./dist/justica-core --no-update-notifier --registry http://localhost:4873",
-    "publish:snapshot": "npm run build:justica-core && npm publish ./dist/justica-core --no-update-notifier --registry=https://nexus.stj.jus.br/repository/npm-snapshot/",
+    "publish:snapshot": "npm run build:justica-core && npm publish ./dist/justica-core --registry=https://nexus.stj.jus.br/repository/npm-snapshot/",
     "publish:release": "npm run build:justica-core && npm publish ./dist/justica-core --no-update-notifier --registry=https://nexus.stj.jus.br/repository/npm-release/"
   },
   "private": true,
@@ -65,5 +65,10 @@
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "typescript": "~4.1.5"
+  },
+  "overrides": {
+    "terser": {
+      "source-map": "0.6.1"
+    }
   }
 }

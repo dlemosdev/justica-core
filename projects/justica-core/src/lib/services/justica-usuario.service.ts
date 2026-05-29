@@ -45,7 +45,8 @@ export class JusticaUsuarioService {
       seqUsuario: Number(payloadDecodificado.usuario),
       seqLocal: Number(payloadDecodificado.local),
       nomeUsuario: String(payloadDecodificado.nome),
-      nomeLocal: String(payloadDecodificado.nomeLocal)
+      nomeLocal: String(payloadDecodificado.nomeLocal),
+      permissoes: payloadDecodificado.authorities ?? []
     };
 
     return this._usuarioAtual;

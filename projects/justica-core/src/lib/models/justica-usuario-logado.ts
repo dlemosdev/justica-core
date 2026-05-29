@@ -3,4 +3,5 @@ export interface JusticaUsuarioLogado {
   seqLocal: number;
   nomeUsuario: string;
   nomeLocal: string;
+  permissoes: string[];
 }

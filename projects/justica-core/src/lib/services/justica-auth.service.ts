@@ -6,6 +6,7 @@ import {JUSTICA_WINDOW, JusticaWindow} from '../tokens/justica-window.token';
 import {JusticaInatividadeUsuarioService} from './justica-inatividade-usuario.service';
 import {JusticaTokenStorageService} from './justica-token-storage.service';
 import {JusticaDialogService} from '../components/justica-dialog/justica-dialog.service';
+import {JusticaUsuarioService} from './justica-usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,7 @@ export class JusticaAuthService {
 
   constructor(
     private readonly _justicaTokenStorageService: JusticaTokenStorageService,
+    private readonly _justicaUsuarioService: JusticaUsuarioService,
     private readonly _justicaInatividadeUsuarioService: JusticaInatividadeUsuarioService,
     private readonly _justicaDialogService: JusticaDialogService,
     @Inject(JUSTICA_CORE_CONFIG)
@@ -44,5 +46,34 @@ export class JusticaAuthService {
       .warning('Atenção!', 'A sua sessão expirou! Realize novamente o login.')
       .afterClosed()
       .subscribe(() => this.realizarLogout());
+  }
+
+  possuiPermissao(codigoPermissao: string): boolean {
+    return !!codigoPermissao && this._justicaUsuarioService
+      .obterUsuario()
+      ?.permissoes
+      ?.includes(codigoPermissao);
+  }
+
+  possuiPermisoes(permissoes: string[] = [], todasAsPermissoes: boolean = false): boolean {
+    if (!permissoes.length) {
+      return true;
+    }
+
+    return todasAsPermissoes
+      ? this.possuiTodasPermissoes(permissoes)
+      : this.possuiAlgumaPermissao(permissoes);
+  }
+
+  possuiAlgumaPermissao(permissoes: string[]): boolean {
+    return permissoes.some((permissao) =>
+      this.possuiPermissao(permissao)
+    );
+  }
+
+  possuiTodasPermissoes(permissoes: string[]): boolean {
+    return permissoes.every((permissao) =>
+      this.possuiPermissao(permissao)
+    );
   }
 }
